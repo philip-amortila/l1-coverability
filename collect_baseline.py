@@ -289,19 +289,20 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         base_eval_average_psa = np.zeros(shape=(tuple(base_utils.num_sa)))
 
         #re-estimate the occupancy for every policy and average them. this might be overkill (can sample policy uniformly at random)
-        print('starting eval occupancy estimation')
-        for j in range(len(cov_policies)):
-            cov_eval_i_p, cov_eval_i_psa,_ = cov_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts, initial_state=initial_state, 
-            render=args.render, video_dir=video_dir+'/normal/'+epoch)
-            ent_eval_i_p, ent_eval_i_psa,_ = ent_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts,initial_state=initial_state, 
-            render=args.render, video_dir=video_dir+'/online/'+epoch)
-            cov_eval_average_p = cov_eval_average_p * (j)/float(j+1) + cov_eval_i_p/float(j+1)
-            cov_eval_average_psa = cov_eval_average_psa * (j)/float(j+1) + cov_eval_i_psa/float(j+1)
-            ent_eval_average_p = ent_eval_average_p * (j)/float(j+1) + ent_eval_i_p/float(j+1)
-            ent_eval_average_psa = ent_eval_average_psa * (j)/float(j+1) + ent_eval_i_psa/float(j+1)
+        #commenting this out now
+        # print('starting eval occupancy estimation')
+        # for j in range(len(cov_policies)):
+        #     cov_eval_i_p, cov_eval_i_psa,_ = cov_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts, initial_state=initial_state, 
+        #     render=args.render, video_dir=video_dir+'/normal/'+epoch)
+        #     ent_eval_i_p, ent_eval_i_psa,_ = ent_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts,initial_state=initial_state, 
+        #     render=args.render, video_dir=video_dir+'/online/'+epoch)
+        #     cov_eval_average_p = cov_eval_average_p * (j)/float(j+1) + cov_eval_i_p/float(j+1)
+        #     cov_eval_average_psa = cov_eval_average_psa * (j)/float(j+1) + cov_eval_i_psa/float(j+1)
+        #     ent_eval_average_p = ent_eval_average_p * (j)/float(j+1) + ent_eval_i_p/float(j+1)
+        #     ent_eval_average_psa = ent_eval_average_psa * (j)/float(j+1) + ent_eval_i_psa/float(j+1)
 
-        base_eval_average_p, base_eval_average_psa,_  = cov_policy.execute_random(T, zero_reward, num_rollouts=args.num_rollouts, initial_state=initial_state, 
-            render=args.render, video_dir=video_dir+'/baseline/'+epoch) 
+        # base_eval_average_p, base_eval_average_psa,_  = cov_policy.execute_random(T, zero_reward, num_rollouts=args.num_rollouts, initial_state=initial_state, 
+        #     render=args.render, video_dir=video_dir+'/baseline/'+epoch) 
 
         #print('cov_eval_average_p:', cov_eval_average_p)
 
@@ -484,8 +485,8 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
 
         # Update experimental running averages.
         #phil: creating number of states statistics
-        cov_eval_average_number_sa = number_unique_states(cov_eval_average_psa)
-        cov_eval_average_number_s = number_unique_states(cov_eval_average_p)
+        cov_eval_average_number_sa = number_unique_states(cov_new_average_psa)
+        cov_eval_average_number_s = number_unique_states(cov_new_average_p)
         cov_running_avg_ent = cov_running_avg_ent * (i)/float(i+1) + cov_new_average_ent/float(i+1)
         # cov_running_avg_l1 = cov_running_avg_l1 * (i)/float(i+1) + cov_l1/float(i+1)
         # cov_running_avg_pg = cov_running_avg_pg * (i)/float(i+1) + rf_cov_pg/float(i+1)
@@ -496,8 +497,8 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         # cov_running_avg_ps.append(cov_running_avg_p)  
 
         # # Update entropy running averages.
-        ent_eval_average_number_sa = number_unique_states(ent_eval_average_psa)
-        ent_eval_average_number_s = number_unique_states(ent_eval_average_p)
+        ent_eval_average_number_sa = number_unique_states(ent_new_average_psa)
+        ent_eval_average_number_s = number_unique_states(ent_new_average_p)
         ent_running_avg_ent = ent_running_avg_ent * (i)/float(i+1) + ent_new_average_ent/float(i+1)
         # ent_running_avg_l1 = ent_running_avg_l1 * (i)/float(i+1) + ent_l1/float(i+1)
         # ent_running_avg_pg = ent_running_avg_pg * (i)/float(i+1) + rf_ent_pg/float(i+1)
@@ -508,8 +509,8 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         # ent_running_avg_ps.append(ent_running_avg_p)  
 
         # # Update baseline running averages.
-        base_eval_average_number_sa = number_unique_states(base_eval_average_psa)
-        base_eval_average_number_s = number_unique_states(base_eval_average_p)
+        base_eval_average_number_sa = number_unique_states(base_new_average_psa)
+        base_eval_average_number_s = number_unique_states(base_new_average_p)
         baseline_running_avg_ent = baseline_running_avg_ent * (i)/float(i+1) + round_entropy_baseline/float(i+1)
         # baseline_running_avg_l1 = baseline_running_avg_l1 * (i)/float(i+1) + base_l1/float(i+1)
         # baseline_running_avg_pg = baseline_running_avg_pg * (i)/float(i+1) + rf_base_pg/float(i+1)
@@ -608,7 +609,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
 
         print("ent_round_avg_ent[%d] = %f" % (i, ent_new_average_ent))
         print("ent_running_avg_ent = %s" % ent_running_avg_ent)
-        print("ent average unique states = %s" % ent_eval_average_number_sa)
+        print("ent average unique states = %s" % ent_eval_average_number_s)
         print("ent average unique state-actions = %s" % ent_eval_average_number_sa)
         print("ent_l1[%d] = %f" % (i, ent_l1))
         #print("ent_running_avg_l1 = %s" % ent_running_avg_l1)
@@ -619,7 +620,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
 
         print("round_entropy_baseline[%d] = %f" % (i, round_entropy_baseline))
         print("running_avg_ent_baseline = %s" % baseline_running_avg_ent)
-        print("base average unique states = %s" % base_eval_average_number_sa)
+        print("base average unique states = %s" % base_eval_average_number_s)
         print("base average unique state-actions = %s" % base_eval_average_number_sa)
         print("base_l1[%d] = %f" % (i, base_l1))
         #print("baseline_running_avg_l1 = %s" % baseline_running_avg_l1)
