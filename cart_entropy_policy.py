@@ -100,7 +100,7 @@ class CartEntropyPolicy(nn.Module):
 
     def update_policy(self):
         R = 0
-        policy_loss = []
+        policy_loss = [] #
         rewards = []
 
         # Get discounted rewards from the episode.
