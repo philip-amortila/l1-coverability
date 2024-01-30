@@ -105,7 +105,7 @@ class CartEntropyPolicy(nn.Module):
         policy_loss = [] #
         rewards = []
 
-        # Get discounted rewards from the episode.
+        #Get discounted rewards from the episode.
         for r in self.rewards[::-1]:
             R = r + self.gamma * R
             rewards.insert(0, R)
@@ -515,7 +515,7 @@ class CartEntropyPolicy(nn.Module):
         total_reward = 0.
         exited = False
 
-        # print('starting execute_random_internal with state:', self.get_obs())
+        print('starting execute_random_internal with state:', self.get_obs())
         # print('should be starting simulation at state:', str(state))
 
         for t in range(T):  
@@ -580,7 +580,7 @@ class CartEntropyPolicy(nn.Module):
                 state = self.get_obs()
 
                 # print('state inside execute_random:', state)
-                # print('initial_state inside execute_random:', initial_state)
+                print('initial_state inside execute_random:', initial_state)
                 p_int, p_sa_int, total_reward_int = self.execute_random_internal(self.env, T, reward_fn, state, render)
                 p += p_int
                 p_sa += p_sa_int

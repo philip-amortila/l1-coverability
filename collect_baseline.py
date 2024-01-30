@@ -293,19 +293,19 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
 
         #re-estimate the occupancy for every policy and average them. this might be overkill (can sample policy uniformly at random)
         #commenting this out now
-        # print('starting eval occupancy estimation')
-        # for j in range(len(cov_policies)):
-        #     cov_eval_i_p, cov_eval_i_psa,_ = cov_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts, initial_state=initial_state, 
-        #     render=args.render, video_dir=video_dir+'/normal/'+epoch)
-        #     ent_eval_i_p, ent_eval_i_psa,_ = ent_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts,initial_state=initial_state, 
-        #     render=args.render, video_dir=video_dir+'/online/'+epoch)
-        #     cov_eval_average_p = cov_eval_average_p * (j)/float(j+1) + cov_eval_i_p/float(j+1)
-        #     cov_eval_average_psa = cov_eval_average_psa * (j)/float(j+1) + cov_eval_i_psa/float(j+1)
-        #     ent_eval_average_p = ent_eval_average_p * (j)/float(j+1) + ent_eval_i_p/float(j+1)
-        #     ent_eval_average_psa = ent_eval_average_psa * (j)/float(j+1) + ent_eval_i_psa/float(j+1)
+        print('starting eval occupancy estimation')
+        for j in range(len(cov_policies)):
+            cov_eval_i_p, cov_eval_i_psa,_ = cov_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts, initial_state=initial_state, 
+            render=args.render, video_dir=video_dir+'/normal/'+epoch)
+            ent_eval_i_p, ent_eval_i_psa,_ = ent_policies[j].execute(T, reward_fn=zero_reward, num_rollouts =args.num_rollouts,initial_state=initial_state, 
+            render=args.render, video_dir=video_dir+'/online/'+epoch)
+            cov_eval_average_p = cov_eval_average_p * (j)/float(j+1) + cov_eval_i_p/float(j+1)
+            cov_eval_average_psa = cov_eval_average_psa * (j)/float(j+1) + cov_eval_i_psa/float(j+1)
+            ent_eval_average_p = ent_eval_average_p * (j)/float(j+1) + ent_eval_i_p/float(j+1)
+            ent_eval_average_psa = ent_eval_average_psa * (j)/float(j+1) + ent_eval_i_psa/float(j+1)
 
-        # base_eval_average_p, base_eval_average_psa,_  = cov_policy.execute_random(T, zero_reward, num_rollouts=args.num_rollouts, initial_state=initial_state, 
-        #     render=args.render, video_dir=video_dir+'/baseline/'+epoch) 
+        base_eval_average_p, base_eval_average_psa,_  = cov_policy.execute_random(T, zero_reward, num_rollouts=args.num_rollouts, initial_state=initial_state, 
+            render=args.render, video_dir=video_dir+'/baseline/'+epoch) 
 
         #print('cov_eval_average_p:', cov_eval_average_p)
 
@@ -315,9 +315,9 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
             # cov_new_average_ent = scipy.stats.entropy(cov_eval_average_p.flatten())
             # ent_new_average_ent = scipy.stats.entropy(ent_eval_average_p.flatten())
             # round_entropy_baseline = scipy.stats.entropy(base_eval_average_p.flatten())
-            cov_new_average_ent = scipy.stats.entropy(cov_new_average_p.flatten())
-            ent_new_average_ent = scipy.stats.entropy(ent_new_average_p.flatten())
-            round_entropy_baseline = scipy.stats.entropy(base_new_average_p.flatten())
+            cov_new_average_ent = scipy.stats.entropy(cov_eval_average_p.flatten())
+            ent_new_average_ent = scipy.stats.entropy(ent_eval_average_p.flatten())
+            round_entropy_baseline = scipy.stats.entropy(base_eval_average_p.flatten())
         else:
             cov_new_average_ent = 0
             ent_new_average_ent = 0
@@ -458,7 +458,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         #reward function for coverability algorithm
         # print('testing reward shaping')
         #phil: trying the epsilon thing:
-        cov_reward_fn = l1_cov(cov_new_average_psa,mu,0.00001,c_inf)
+        cov_reward_fn = l1_cov(cov_new_average_psa,mu,0.0001,c_inf)
         #print('cov_reward_fn:', cov_reward_fn)
         cov_reward_fn = reward_shaping(cov_reward_fn)
         #print('new cov_reward_fn:', cov_reward_fn)
@@ -491,9 +491,9 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
 
         # Update experimental running averages.
         #phil: creating number of states statistics
-        cov_eval_average_number_sa = number_unique_states(cov_new_average_psa)
-        cov_eval_average_number_s = number_unique_states(cov_new_average_p)
-        cov_running_avg_ent = cov_running_avg_ent * (i)/float(i+1) + cov_new_average_ent/float(i+1)
+        cov_eval_average_number_sa = number_unique_states(cov_eval_average_psa)
+        cov_eval_average_number_s = number_unique_states(cov_eval_average_p)
+        cov_running_avg_ent = cov_running_avg_ent * (i)/float(i+1) + cov_eval_average_ent/float(i+1)
         # cov_running_avg_l1 = cov_running_avg_l1 * (i)/float(i+1) + cov_l1/float(i+1)
         # cov_running_avg_pg = cov_running_avg_pg * (i)/float(i+1) + rf_cov_pg/float(i+1)
         # cov_running_avg_p = cov_running_avg_p * (i)/float(i+1) + cov_new_average_p/float(i+1)
@@ -503,9 +503,9 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         # cov_running_avg_ps.append(cov_running_avg_p)  
 
         # # Update entropy running averages.
-        ent_eval_average_number_sa = number_unique_states(ent_new_average_psa)
-        ent_eval_average_number_s = number_unique_states(ent_new_average_p)
-        ent_running_avg_ent = ent_running_avg_ent * (i)/float(i+1) + ent_new_average_ent/float(i+1)
+        ent_eval_average_number_sa = number_unique_states(ent_eval_average_psa)
+        ent_eval_average_number_s = number_unique_states(ent_eval_average_p)
+        ent_running_avg_ent = ent_running_avg_ent * (i)/float(i+1) + ent_eval_average_ent/float(i+1)
         # ent_running_avg_l1 = ent_running_avg_l1 * (i)/float(i+1) + ent_l1/float(i+1)
         # ent_running_avg_pg = ent_running_avg_pg * (i)/float(i+1) + rf_ent_pg/float(i+1)
         # ent_running_avg_p = ent_running_avg_p * (i)/float(i+1) + ent_new_average_p/float(i+1)
@@ -515,8 +515,8 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         # ent_running_avg_ps.append(ent_running_avg_p)  
 
         # # Update baseline running averages.
-        base_eval_average_number_sa = number_unique_states(base_new_average_psa)
-        base_eval_average_number_s = number_unique_states(base_new_average_p)
+        base_eval_average_number_sa = number_unique_states(base_eval_average_psa)
+        base_eval_average_number_s = number_unique_states(base_eval_average_p)
         baseline_running_avg_ent = baseline_running_avg_ent * (i)/float(i+1) + round_entropy_baseline/float(i+1)
         # baseline_running_avg_l1 = baseline_running_avg_l1 * (i)/float(i+1) + base_l1/float(i+1)
         # baseline_running_avg_pg = baseline_running_avg_pg * (i)/float(i+1) + rf_base_pg/float(i+1)
@@ -569,11 +569,14 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         data.append(rf_ent_pg)
         data.append(rf_base_pg)
         data.append(rf_none_pg)
-        data.append(cov_eval_average_p)
-        data.append(ent_eval_average_p)
+        data.append(cov_new_average_p)
+        data.append(ent_new_average_p)
         data.append(base_eval_average_p)
+        data.append(cov_eval_average_number_s)
         data.append(cov_eval_average_number_sa)
+        data.append(ent_eval_average_number_s)
         data.append(ent_eval_average_number_sa)
+        data.append(base_eval_average_number_s)
         data.append(base_eval_average_number_sa)
         pickle.dump(data, file)
         # data_occupancies = [cov_running_avg_ps, ent_running_avg_ps, baseline_running_avg_ps]

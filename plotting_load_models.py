@@ -14,6 +14,8 @@ import matplotlib.mlab as mlab
 from mpl_toolkits.mplot3d import Axes3D
 
 import pickle
+import collect_baseline
+import torch
 
 # By default, the plotter saves figures to the directory where it's executed.
 
@@ -405,12 +407,75 @@ def main():
     # #print(new_ent_list)
     # base_list_of_running_avg_l1 = np.asarray(base_list_of_running_avg_l1)
     # new_base_list = base_list_of_running_avg_l1[:,0::5]
-    running_average_entropy3(cov_list_of_running_avg_ent, base_list_of_running_avg_ent, ent_list_of_running_avg_ent)
-    #running_average_l13(new_cov_list, new_base_list, new_ent_list) 
-    running_average_l13(cov_list_of_running_avg_l1, base_list_of_running_avg_l1, ent_list_of_running_avg_l1) 
-    running_average_pg4(cov_list_of_running_avg_pg, base_list_of_running_avg_pg, ent_list_of_running_avg_pg,none_list_of_running_avg_pg)
-    running_average_sas3(cov_list_of_average_num_sa, base_list_of_average_num_sa, ent_list_of_average_num_sa)
-    indexes = [1,5,15,30]
+
+
+
+    #phil: load models.
+    print('loading models')
+    initial_state = collect_baseline.init_state(args.env)
+    zero_reward = np.zeros(shape=(tuple(base_utils.num_sa)))
+    LOAD_DIR = '/Users/philipamortila/Documents/GitHub/coverability-experiments-final/models-MountainCarContinuous-v0/models_mountaincar_smallepisodes_smalleps_smallinit_4_2024_01_30-00-54/'
+    cov_policies = []
+    ent_policies = []
+    for i in range(args.epochs):
+        cov_policy = torch.load(LOAD_DIR + "cov_policy"+"_"+str(i))
+        ent_policy = torch.load(LOAD_DIR + "ent_policy"+"_"+str(i))
+        cov_policies.append(cov_policy)
+        ent_policies.append(ent_policy)
+
+    #recompute statistics 
+    cov_avg_p = []
+    cov_avg_psa = []
+    ent_avg_p = []
+    ent_avg_psa = []
+    base_avg_p = []
+    base_avg_psa = []
+    indices = [0,4,14,29]
+    print('computing average occupancies for indices:', indices)
+    #compute average occupancy
+    for idx in range(args.epochs):
+        cov_eval_average_p = np.zeros(shape=(tuple(base_utils.num_states)))
+        cov_eval_average_psa = np.zeros(shape=(tuple(base_utils.num_sa)))
+        ent_eval_average_p = np.zeros(shape=(tuple(base_utils.num_states)))
+        ent_eval_average_psa = np.zeros(shape=(tuple(base_utils.num_sa)))
+        base_eval_average_p = np.zeros(shape=(tuple(base_utils.num_states)))
+        base_eval_average_psa = np.zeros(shape=(tuple(base_utils.num_sa)))
+        if idx in indices:
+            print('computing average occupancy for:', idx)
+
+            for j in range(idx+1):
+                cov_eval_i_p, cov_eval_i_psa,_ = cov_policies[j].execute(args.T, reward_fn=zero_reward, num_rollouts =args.num_rollouts, initial_state=initial_state, 
+                    render=args.render)
+                ent_eval_i_p, ent_eval_i_psa,_ = ent_policies[j].execute(args.T, reward_fn=zero_reward, num_rollouts =args.num_rollouts,initial_state=initial_state, 
+                    render=args.render)
+                cov_eval_average_p = cov_eval_average_p * (j)/float(j+1) + cov_eval_i_p/float(j+1)
+                cov_eval_average_psa = cov_eval_average_psa * (j)/float(j+1) + cov_eval_i_psa/float(j+1)
+                ent_eval_average_p = ent_eval_average_p * (j)/float(j+1) + ent_eval_i_p/float(j+1)
+                ent_eval_average_psa = ent_eval_average_psa * (j)/float(j+1) + ent_eval_i_psa/float(j+1)
+
+            base_eval_average_p, base_eval_average_psa,_  = cov_policy.execute_random(args.T, zero_reward, num_rollouts=args.num_rollouts, initial_state=initial_state, 
+                render=args.render) 
+
+        cov_avg_p.append(cov_eval_average_p)
+        cov_avg_psa.append(cov_eval_average_psa)
+        ent_avg_p.append(ent_eval_average_p)
+        ent_avg_psa.append(ent_eval_average_psa)
+        base_avg_p.append(base_eval_average_p)
+        base_avg_psa.append(base_eval_average_psa)
+        
+
+    #print('cov_avg_p:', cov_avg_p)
+    heatmap4(cov_avg_p, base_avg_p, indices)
+    heatmap3x4(cov_avg_p, ent_avg_p, base_avg_p, indices)
+
+    # running_average_entropy3(cov_list_of_running_avg_ent, base_list_of_running_avg_ent, ent_list_of_running_avg_ent)
+    # #running_average_l13(new_cov_list, new_base_list, new_ent_list) 
+    # running_average_l13(cov_list_of_running_avg_l1, base_list_of_running_avg_l1, ent_list_of_running_avg_l1) 
+    # running_average_pg4(cov_list_of_running_avg_pg, base_list_of_running_avg_pg, ent_list_of_running_avg_pg,none_list_of_running_avg_pg)
+    # running_average_sas3(cov_list_of_average_num_sa, base_list_of_average_num_sa, ent_list_of_average_num_sa)
+    # indexes = [1,5,15,30]
+
+
     #cov_running_avg_p = cov_running_avg_ps[0][30]
     #print(len(cov_running_avg_ps))
     #print(cov_running_avg_p)

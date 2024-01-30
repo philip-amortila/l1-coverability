@@ -85,7 +85,7 @@ class Continuous_MountainCarEnv(gym.Env):
 
         # PATCHED
         if self.reset_state is None:
-            self.state = np.array([self.np_random.uniform(low=-1.2, high=0.6), 0])
+            self.state = np.array([self.np_random.uniform(low=-0.8, high=-0.2), 0])
         else:
             self.state = self.reset_state
 
