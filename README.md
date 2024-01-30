@@ -12,4 +12,8 @@ Things to change in the flags:
 
 Things to change in the code:
 
-- sys.path in Line 10 of collect_baseline.py. Mine is sys.path = ['/Users/philipamortila/Documents/GitHub/coverability_experiments/maxent-master'+'/gym-fork'] + sys.path
+- sys.path in Line 10 (at time of writing) of collect_baseline.py. 
+
+- FIG_DIR in Line 23 (at time of etc.) of plotting.py
+
+- MODEL_DIR in Line 654 (etc.) of collect_baseline.py 

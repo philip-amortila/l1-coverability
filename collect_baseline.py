@@ -7,7 +7,7 @@
 import sys
 import os
 home_dir = os.getenv('HOME')
-sys.path = ['/Users/philipamortila/Documents/GitHub/coverability_experiments/maxent-master'+'/gym-fork'] + sys.path #phil: change this to your local folder
+sys.path = ['/Users/philipamortila/Documents/GitHub/coverability_experiments_final'+'/gym-fork'] + sys.path #phil: change this to your local folder
 
 import time
 from datetime import datetime
