@@ -117,9 +117,9 @@ class CartEntropyPolicy(nn.Module):
         policy_loss = torch.cat(policy_loss).sum() # cost function?
         policy_loss.backward()
         self.optimizer.step()
-        self.rewards.clear()
-        self.saved_log_probs.clear()
-        self.optimizer.zero_grad()
+        del self.rewards[:]
+        del self.saved_log_probs[:]
+        #self.optimizer.zero_grad()
 
         return policy_loss
 

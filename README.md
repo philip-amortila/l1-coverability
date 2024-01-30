@@ -1,6 +1,12 @@
 Commands to run:
 
+big version:
+
 python collect_baseline.py --env="MountainCarContinuous-v0" --T=200 --train_steps=400 --num_rollouts=1000 --episodes=15000 --epochs=51 --exp_runs=5 --exp_name=mountaincar_test --replicate=0 --save_models --measurements='el'
+
+smaller version:
+
+python collect_baseline.py --env="MountainCarContinuous-v0" --T=200 --train_steps=400 --num_rollouts=100 --episodes=10000 --epochs=31 --exp_runs=5 --exp_name=mountaincar_noleak_smalleps_smallinit --replicate=0 --save_models --measurements='e' 
 
 Things to change in the flags:
 

@@ -277,6 +277,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         base_new_average_p = base_new_average_p * (i)/float(i+1) + p_baseline/float(i+1)
         base_new_average_psa = base_new_average_psa * (i)/float(i+1) + p_sa_baseline/float(i+1)
 
+
         # print('new_cov_psa:', new_cov_psa)
         # print('cov_new_average_psa:', cov_new_average_psa)
 
@@ -309,9 +310,12 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         #calculate the new entropy:
         if measure_entropy:
             print('calculating entropies')
-            cov_new_average_ent = scipy.stats.entropy(cov_eval_average_p.flatten())
-            ent_new_average_ent = scipy.stats.entropy(ent_eval_average_p.flatten())
-            round_entropy_baseline = scipy.stats.entropy(base_eval_average_p.flatten())
+            # cov_new_average_ent = scipy.stats.entropy(cov_eval_average_p.flatten())
+            # ent_new_average_ent = scipy.stats.entropy(ent_eval_average_p.flatten())
+            # round_entropy_baseline = scipy.stats.entropy(base_eval_average_p.flatten())
+            cov_new_average_ent = scipy.stats.entropy(cov_new_average_p.flatten())
+            ent_new_average_ent = scipy.stats.entropy(ent_new_average_p.flatten())
+            round_entropy_baseline = scipy.stats.entropy(base_new_average_p.flatten())
         else:
             cov_new_average_ent = 0
             ent_new_average_ent = 0
@@ -452,10 +456,10 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='elp'):
         #reward function for coverability algorithm
         # print('testing reward shaping')
         #phil: trying the epsilon thing:
-        cov_reward_fn = l1_cov(cov_new_average_psa,mu,0.0001,c_inf)
-        print('cov_reward_fn:', cov_reward_fn)
+        cov_reward_fn = l1_cov(cov_new_average_psa,mu,0.00001,c_inf)
+        #print('cov_reward_fn:', cov_reward_fn)
         cov_reward_fn = reward_shaping(cov_reward_fn)
-        print('new cov_reward_fn:', cov_reward_fn)
+        #print('new cov_reward_fn:', cov_reward_fn)
 
         #cov_reward_fn = mu_objective(cov_new_average_psa, mu, c_inf) 
         #cov_reward_fn = reward_shaping_polynomial(cov_reward_fn)
