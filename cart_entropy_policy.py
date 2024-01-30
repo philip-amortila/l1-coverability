@@ -113,7 +113,7 @@ class CartEntropyPolicy(nn.Module):
         for log_prob, reward in zip(self.saved_log_probs, rewards):
             policy_loss.append(-log_prob * reward.float())
 
-        self.optimizer.zero_grad()
+        self.optimizer.zero_grad(set_to_none=True)
         policy_loss = torch.cat(policy_loss).sum() # cost function?
         policy_loss.backward()
         self.optimizer.step()
