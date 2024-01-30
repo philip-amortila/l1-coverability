@@ -14,6 +14,8 @@ from gym import wrappers
 import base_utils
 import copy
 
+import gc
+
 # Get the initial zero-state for the env.
 def init_state(env):
     if env == "Pendulum-v0":
@@ -120,6 +122,7 @@ class CartEntropyPolicy(nn.Module):
         del self.rewards[:]
         del self.saved_log_probs[:]
         #self.optimizer.zero_grad()
+        gc.collect()
 
         return policy_loss
 
@@ -396,6 +399,8 @@ class CartEntropyPolicy(nn.Module):
             
             loss = self.update_policy()
             running_loss = running_loss * (i_episode)/float(i_episode+1) + loss/float(i_episode+1)
+
+            gc.collect()
 
             # Log to console.
             if (i_episode) % 100 == 0:
