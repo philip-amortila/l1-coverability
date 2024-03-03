@@ -16,9 +16,6 @@ parser.add_argument('--episodes', type=int, default=100, metavar='ep',
                     help='number of episodes per agent')
 parser.add_argument('--epochs', type=int, default=50, metavar='epo',
                     help='number of models to train on entropy rewards')
-# parser.add_argument('--exp_runs', type=int, default=5, help='number of experimental runs to do')
-# parser.add_argument('--replicate', type=int, default=1, help='which number experimental run is this?')
-# parser.add_argument('--num_rollouts', type=int, default=1, help='number of rollouts to do when estimating occupancies')
 parser.add_argument('--T', type=int, default=1000, metavar='T',
                     help='number of steps to roll out entropy policy')
 parser.add_argument('--env', type=str, default='fake', metavar='env',
@@ -47,11 +44,11 @@ parser.add_argument('--gaussian', action='store_true',
 parser.add_argument('--reduce_dim', type=int, default=5, metavar='rd',
                     help='dimension reduction parameter')
 
-#phil: new arguments
 parser.add_argument('--exp_runs', type=int, default=5, help='number of experimental runs to do')
 parser.add_argument('--replicate', type=int, default=1, help='which number experimental run is this?')
 parser.add_argument('--num_rollouts', type=int, default=1, help='number of rollouts to do when estimating occupancies')
 parser.add_argument('--measurements', type=str, default='elp', help='measurements to make during experiment. e: entropy. l: l1-cov. p: "reward-free" pg value')
+parser.add_argument('--reg_eps', type=float, default=1e-4, help='the regularization epsilon to use in l1_cov reward function')
 
 
 args = parser.parse_args()
@@ -156,8 +153,6 @@ if args.env != 'Ant-v2' and args.env != 'Humanoid-v2':
     tmp = list(copy.deepcopy(num_states))
     tmp.append(action_dim)
     num_sa = tuple(tmp) 
-
-    print('state_bins in base_utils:', state_bins)
 
 total_state_space = nv*nx
 

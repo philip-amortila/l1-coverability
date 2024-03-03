@@ -1,2 +1,7 @@
 figs/
 models-MountainCarContinuous-v0/
+models-Pendulum-v0/
+__pycache__/
+*.py[cod]
+*.pdf
+*.pyc
