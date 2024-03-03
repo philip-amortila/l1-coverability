@@ -141,12 +141,12 @@ class CartEntropyPolicy(nn.Module):
 
     #get initial state from a reset distribution. picks a uniform random policy from policies and rolls in for random number of steps
     def init_state_reset(self,policies,T):
-        state = self.env.reset() #phil: to change this. self.env.env.reset_state = initial_state
+        state = self.env.reset()
         #pick a random policy
         idx = np.random.randint(0,high=len(policies))
         pi = policies[idx]
         tau = np.random.randint(0,high=T)
-        #roll-in for tau
+        #roll-in for tau steps
         for i in range(tau):
             action = pi.select_action(state)   
             state, _, done, _ = self.env.step(action)
@@ -215,7 +215,7 @@ class CartEntropyPolicy(nn.Module):
                 break 
         return state
 
-    #phil: learn a policy with rollins given by the uniformly random policy
+    #learn a policy with rollins given by the uniformly random policy
     def learn_policy_reset_random(self, T, reward_fn, sa_reward=True, true_reward=False,
         episodes=1000, train_steps=1000, start_steps=10000):
 

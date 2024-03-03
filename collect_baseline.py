@@ -1,7 +1,7 @@
 import sys
 import os
 home_dir = os.getenv('HOME')
-sys.path = ['/Users/philipamortila/Documents/GitHub/coverability_experiments_final'+'/gym-fork'] + sys.path #phil: change this to your local folder
+sys.path = ['/Users/philipamortila/Documents/GitHub/coverability_experiments_final'+'/gym-fork'] + sys.path #change this to your local folder
 
 import time
 from datetime import datetime
@@ -362,7 +362,6 @@ def main():
 
     # Make environment.
     env = gym.make(args.env)
-    # TODO: limit acceleration (maybe also speed?) for Pendulum.
     if args.env == "Pendulum-v0":
         env.env.max_speed = 8
         env.env.max_torque = 1
