@@ -23,6 +23,12 @@ def init_state(env):
     elif env == "MountainCarContinuous-v0":
         return [-0.50, 0]
 
+def get_obs(state):
+    if base_utils.args.env == "Pendulum-v0":
+        theta, thetadot = state
+        return np.array([np.cos(theta), np.sin(theta), thetadot])
+    elif base_utils.args.env == "MountainCarContinuous-v0":
+        return np.array(state)
 
 class CartEntropyPolicy(nn.Module):
     def __init__(self, env, gamma, lr, obs_dim, action_dim):

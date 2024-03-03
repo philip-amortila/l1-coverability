@@ -23,7 +23,6 @@ from torch.distributions import Categorical
 import base_utils
 args = base_utils.get_args()
 
-#phil: this only works for 3 actions
 def select_action(probs):
     m = Categorical(probs)
     action = m.sample()
@@ -32,13 +31,6 @@ def select_action(probs):
     elif (action.item() == 0):
         return [-1]
     return [1]
-
-def get_obs(state):
-    if base_utils.args.env == "Pendulum-v0":
-        theta, thetadot = state
-        return np.array([np.cos(theta), np.sin(theta), thetadot])
-    elif base_utils.args.env == "MountainCarContinuous-v0":
-        return np.array(state)
 
     # unroll for T steps and compute p
 def execute_policy_internal(env, T, policies, state, render):
@@ -55,12 +47,6 @@ def execute_policy_internal(env, T, policies, state, render):
         # Compute average probability over action space for state.
         probs = torch.tensor(np.zeros(shape=(1,base_utils.action_dim))).float()
         probs = pi.get_probs(state)
-        #probs = torch.tensor(np.zeros(shape=(1,base_utils.action_dim))).float()
-        #var = torch.tensor(np.zeros(shape=(1,base_utils.action_dim))).float()
-        #for policy in policies:
-         #   prob = policy.get_probs(state)
-          #  probs += prob
-        #probs /= len(policies)
         action = select_action(probs)
         
         state, reward, done, _ = env.step(action)

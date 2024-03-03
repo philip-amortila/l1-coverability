@@ -86,7 +86,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='el'):
     seed = []
     if args.env == "Pendulum-v0":
         env.env.state = [np.pi, 0]
-        seed = env.env._get_obs()
+        seed = env.env.state
     elif args.env == "MountainCarContinuous-v0":
         env.env.state = [-0.50, 0]
         seed = env.env.state

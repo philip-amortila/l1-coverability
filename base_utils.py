@@ -47,7 +47,7 @@ parser.add_argument('--reduce_dim', type=int, default=5, metavar='rd',
 parser.add_argument('--exp_runs', type=int, default=5, help='number of experimental runs to do')
 parser.add_argument('--replicate', type=int, default=1, help='which number experimental run is this?')
 parser.add_argument('--num_rollouts', type=int, default=1, help='number of rollouts to do when estimating occupancies')
-parser.add_argument('--measurements', type=str, default='elp', help='measurements to make during experiment. e: entropy. l: l1-cov. p: "reward-free" pg value')
+parser.add_argument('--measurements', type=str, default='elp', help='measurements to make during experiment. e: entropy. l: l1-cov')
 parser.add_argument('--reg_eps', type=float, default=1e-4, help='the regularization epsilon to use in l1_cov reward function')
 
 
