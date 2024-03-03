@@ -1,3 +1,5 @@
+Companion repo for the paper "Scalable Online Exploration via Coverability"
+
 Commands to recreate our experiment
 
 Mountaincar:
