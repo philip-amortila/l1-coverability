@@ -5,9 +5,10 @@ Mountaincar:
 python collect_baseline.py --env="MountainCarContinuous-v0" --T=200 --train_steps=400 --num_rollouts=100 --episodes=1000 --epochs=20 --exp_runs=10 --exp_name=mountaincar_test --replicate=0 --save_models --measurements='el' --reg_eps=1e-4
 
 Pendulum:
+
 python collect_baseline.py --env="Pendulum-v0" --T=200 --train_steps=400 --num_rollouts=100 --episodes=1000 --epochs=20 --exp_runs=10 --exp_name=pendulum_test --replicate=0 --save_models --measurements='el' --reg_eps=1e-4
 
-To plot data: 
+To plot: 
 
 Mountaincar:
 python plotting.py --env="MountainCarContinuous-v0" --T=200 --train_steps=400 --num_rollouts=100 --episodes=1000 --epochs=20 --exp_runs=10 --exp_name=mountaincar_test --replicate=0 --save_models --measurements='el' --reg_eps=1e-4
@@ -16,7 +17,6 @@ and
 
 Pendulum:
 python plotting.py --env="Pendulum-v0" --T=200 --train_steps=400 --num_rollouts=100 --episodes=1000 --epochs=20 --exp_runs=10 --exp_name=pendulum_test --replicate=0 --save_models --measurements='el' --reg_eps=1e-4
-
 
 Things to install:
 
