@@ -37,7 +37,7 @@ Policy = CartEntropyPolicy
 
 #mu-based coverability objective 
 def mu_objective(average_occ_sa,mu,c):
-    return 1 / (average_occ_sa + c * mu) #since mu is uniform, this is just multiplying by 396
+    return 1 / (average_occ_sa + c * mu) #since mu is uniform, this is just multiplying by a constant
     #return mu / (average_occ_sa + c * mu)
 
 #linearly rescales the reward function to be between 0 and 1
@@ -54,7 +54,7 @@ def number_unique_states(average_occ_sa):
 
 #measuring l1-cov for different values of epsilon
 def l1_cov(average_occ_sa,mu,eps,c):
-    return 1 / (average_occ_sa + eps * c * mu) #since mu is uniform, this is just multiplying by 396
+    return 1 / (average_occ_sa + eps * c * mu) #since mu is uniform, this is just multiplying by a constant
     #return mu / (average_occ_sa + c * mu)
 
 #maxent reward fn 
@@ -95,7 +95,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='el'):
     cov_running_avg_p = np.zeros(shape=(tuple(base_utils.num_states)))
     cov_running_avg_ent = 0
     cov_running_avg_l1 = 0
-    #aggregate in a list for plotting purposes. this list for all the epochs in this run
+    #aggregate in a list for plotting purposes. this list is for all the epochs in this run
     cov_running_avg_entropies = []
     cov_running_avg_l1s = []
     cov_running_avg_ps = []
@@ -104,7 +104,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='el'):
     ent_running_avg_ent = 0
     ent_running_avg_l1 = 0
     ent_running_avg_entropies = []
-    ent_running_avg_l1s = [] #size should be 1 \times epochs
+    ent_running_avg_l1s = [] #size is 1 \times epochs
     ent_running_avg_ps = []
 
     baseline_running_avg_p = np.zeros(shape=(tuple(base_utils.num_states)))
@@ -207,7 +207,7 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='el'):
         #calculating the l1-coverability values
         mu = np.ones(shape=tuple(base_utils.num_sa)) #tabular coverability distribution
         mu *= 1/(np.prod(base_utils.num_sa)) #n_sa is a tuple e.g. (for mountaincar, [12,11,3]). multiply to get number of state-actions pairs
-        eps = args.reg_eps #epsilon
+        eps = args.reg_eps #epsilon to regularize with
         print('eps:', eps)
         c_inf = np.prod(base_utils.num_sa)
 
@@ -262,10 +262,6 @@ def collect_entropy_policies(env, epochs, T, MODEL_DIR, measurements='el'):
         #rescaling the rewards to lie in [0,1]
         cov_reward_fn = reward_shaping(cov_reward_fn)
         
-        # If in pendulum, set velocity to 0 with some probability
-        # if args.env == "Pendulum-v0" and random.random() < 0.3:
-        #     initial_state[1] = 0
-
         # Update experimental running averages.
         cov_eval_average_number_sa = number_unique_states(cov_eval_average_psa)
         cov_eval_average_number_s = number_unique_states(cov_eval_average_p)
