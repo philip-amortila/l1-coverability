@@ -36,57 +36,24 @@ def get_next_file(directory, model_time, ext, dot=".pdf"):
     return fname
 
 def running_average_entropy3(cov_list_of_running_avg_ent, base_list_of_running_avg_ent, ent_list_of_running_avg_ent):
-    fname = get_next_file(FIG_DIR, model_time, "running_avg_ent", ".pdf")
-    #compute statistics.
-    #mean:
-    cov_entropy_mean = np.mean(cov_list_of_running_avg_ent,axis=0)
-    ent_entropy_mean = np.mean(ent_list_of_running_avg_ent,axis=0)
-    base_entropy_mean = np.mean(base_list_of_running_avg_ent,axis=0)
-    #std error (ddof=1):
-    cov_entropy_std = scipy.stats.sem(cov_list_of_running_avg_ent,ddof=0,axis=0)
-    ent_entropy_std = scipy.stats.sem(ent_list_of_running_avg_ent,ddof=0,axis=0)
-    base_entropy_std = scipy.stats.sem(base_list_of_running_avg_ent,ddof=0,axis=0)
-
-    plt.figure()
-    plt.plot(np.arange(len(cov_entropy_mean)), cov_entropy_mean)
-    plt.plot(np.arange(len(base_entropy_mean)), base_entropy_mean)
-    plt.plot(np.arange(len(ent_entropy_mean)), ent_entropy_mean)
-    plt.fill_between(np.arange(len(cov_entropy_mean)), cov_entropy_mean-cov_entropy_std, cov_entropy_mean+cov_entropy_std,alpha=0.2)
-    plt.fill_between(np.arange(len(base_entropy_mean)), base_entropy_mean-base_entropy_std, base_entropy_mean+base_entropy_std,alpha=0.2)
-    plt.fill_between(np.arange(len(ent_entropy_mean)), ent_entropy_mean-ent_entropy_std, ent_entropy_mean+ent_entropy_std,alpha=0.2)
-    plt.legend(["Cov", "Random", "MaxEnt"])
-    plt.xlabel("Number of Epochs")
-    plt.ylabel("Policy Entropy")
-    plt.savefig(fname)
-
-def running_average_entropy3_final(cov_list_of_running_avg_ent, base_list_of_running_avg_ent, ent_list_of_running_avg_ent):
-    fname = '/Users/philipamortila/Documents/GitHub/modular-rich-obs/arxiv_efficient/figs/mountaincar/entropy.pdf'
+    fname = get_next_file(FIG_DIR, model_time, "ent", ".pdf")
     #compute statistics.
     #mean:
     cov_entropy_mean = np.mean(cov_list_of_running_avg_ent,axis=0)
     ent_entropy_mean = np.mean(ent_list_of_running_avg_ent,axis=0)
     base_entropy_mean = np.mean(base_list_of_running_avg_ent,axis=0)
     #std:
-    #phil: default: ddof = 1, so \sqrt{1/(n-1) \sum_i (x_i - \bar{x})^2}
     cov_entropy_std = scipy.stats.sem(cov_list_of_running_avg_ent,ddof=0,axis=0)
     ent_entropy_std = scipy.stats.sem(ent_list_of_running_avg_ent,ddof=0,axis=0)
     base_entropy_std = scipy.stats.sem(base_list_of_running_avg_ent,ddof=0,axis=0)
 
     plt.figure()
-    # plt.errorbar(np.arange(len(cov_entropy_mean)), cov_entropy_mean,yerr=cov_entropy_std,fmt='-o')
-    # plt.errorbar(np.arange(len(base_entropy_mean)), base_entropy_mean,yerr=base_entropy_std,fmt='-o')
-    # plt.errorbar(np.arange(len(ent_entropy_mean)), ent_entropy_mean,yerr=ent_entropy_std,fmt='-o')
     plt.plot(np.arange(len(cov_entropy_mean)), cov_entropy_mean, linewidth=2.5)
     plt.plot(np.arange(len(base_entropy_mean)), base_entropy_mean, linewidth=2.5)
     plt.plot(np.arange(len(ent_entropy_mean)), ent_entropy_mean, linewidth=2.5)
     plt.fill_between(np.arange(len(cov_entropy_mean)), cov_entropy_mean-cov_entropy_std, cov_entropy_mean+cov_entropy_std,alpha=0.2)
     plt.fill_between(np.arange(len(base_entropy_mean)), base_entropy_mean-base_entropy_std, base_entropy_mean+base_entropy_std,alpha=0.2)
     plt.fill_between(np.arange(len(ent_entropy_mean)), ent_entropy_mean-ent_entropy_std, ent_entropy_mean+ent_entropy_std,alpha=0.2)
-    #errorbar syntax: 
-        #y_error = 0.2
-        #plt.plot(x, y)
-        #plt.errorbar(x, y, yerr = y_error,fmt ='o')
-    #plt.legend([r'$L_1$-Cov', "Uniform", "MaxEnt"], prop={'size': 15})
     plt.title('Policy Cover Entropy', fontsize=16.5)
     plt.xlabel("Epochs", fontsize=14)
     plt.ylabel("Entropy", fontsize=14)
@@ -95,37 +62,13 @@ def running_average_entropy3_final(cov_list_of_running_avg_ent, base_list_of_run
     plt.savefig(fname, dpi=300, bbox_inches="tight")
 
 def running_average_l13(cov_list_of_running_avg_l1, base_list_of_running_avg_l1, ent_list_of_running_avg_l1):
-    fname = get_next_file(FIG_DIR, model_time, "running_avg_l1", ".pdf")
+    fname = get_next_file(FIG_DIR, model_time, "l1-cov", ".pdf")
     #compute statistics.
     #mean:
     cov_l1_mean = np.mean(cov_list_of_running_avg_l1,axis=0)
     ent_l1_mean = np.mean(ent_list_of_running_avg_l1,axis=0)
     base_l1_mean = np.mean(base_list_of_running_avg_l1,axis=0)
-    #std error (ddof=1):
-    cov_l1_std = scipy.stats.sem(cov_list_of_running_avg_l1,ddof=0,axis=0)
-    ent_l1_std = scipy.stats.sem(ent_list_of_running_avg_l1,ddof=0,axis=0)
-    base_l1_std = scipy.stats.sem(base_list_of_running_avg_l1,ddof=0,axis=0)
-
-    plt.figure()
-    plt.plot(np.arange(len(cov_l1_mean)), cov_l1_mean)
-    plt.plot(np.arange(len(base_l1_mean)), base_l1_mean)
-    plt.plot(np.arange(len(ent_l1_mean)), ent_l1_mean)
-    plt.fill_between(np.arange(len(cov_l1_mean)), cov_l1_mean-cov_l1_std, cov_l1_mean+cov_l1_std,alpha=0.2)
-    plt.fill_between(np.arange(len(base_l1_mean)), base_l1_mean-base_l1_std, base_l1_mean+base_l1_std,alpha=0.2)
-    plt.fill_between(np.arange(len(ent_l1_mean)), ent_l1_mean-ent_l1_std, ent_l1_mean+ent_l1_std,alpha=0.2)
-    plt.legend(["Cov", "Random", "MaxEnt"])
-    plt.xlabel("Number of Epochs")
-    plt.ylabel("mu-L1-coverability")
-    plt.savefig(fname)
-
-def running_average_l13_final(cov_list_of_running_avg_l1, base_list_of_running_avg_l1, ent_list_of_running_avg_l1):
-    fname = '/Users/philipamortila/Documents/GitHub/modular-rich-obs/arxiv_efficient/figs/mountaincar/l1-cov.pdf'
-    #compute statistics.
-    #mean:
-    cov_l1_mean = np.mean(cov_list_of_running_avg_l1,axis=0)
-    ent_l1_mean = np.mean(ent_list_of_running_avg_l1,axis=0)
-    base_l1_mean = np.mean(base_list_of_running_avg_l1,axis=0)
-    #std error (ddof=1):
+    #std error:
     cov_l1_std = scipy.stats.sem(cov_list_of_running_avg_l1,ddof=0,axis=0)
     ent_l1_std = scipy.stats.sem(ent_list_of_running_avg_l1,ddof=0,axis=0)
     base_l1_std = scipy.stats.sem(base_list_of_running_avg_l1,ddof=0,axis=0)
@@ -147,43 +90,17 @@ def running_average_l13_final(cov_list_of_running_avg_l1, base_list_of_running_a
 
 
 def running_average_ss3(cov_list_of_average_num_s, base_list_of_average_num_s, ent_list_of_average_num_s):
-    fname = get_next_file(FIG_DIR, model_time, "list_of_num_s", ".pdf")
+    fname = get_next_file(FIG_DIR, model_time, "num_states", ".pdf")
     #compute statistics.
     #mean:
     cov_ss_mean = np.mean(cov_list_of_average_num_s,axis=0)
     ent_ss_mean = np.mean(ent_list_of_average_num_s,axis=0)
     base_ss_mean = np.mean(base_list_of_average_num_s,axis=0)
-    #std error (ddof=1):
+    #std error:
     cov_ss_std = scipy.stats.sem(cov_list_of_average_num_s,axis=0)
     ent_ss_std = scipy.stats.sem(ent_list_of_average_num_s,axis=0)
     base_ss_std = scipy.stats.sem(base_list_of_average_num_s,axis=0)
 
-    #print('done computing stats in ')
-    plt.figure()
-    plt.plot(np.arange(len(cov_ss_mean)), cov_ss_mean)
-    plt.plot(np.arange(len(base_ss_mean)), base_ss_mean)
-    plt.plot(np.arange(len(ent_ss_mean)), ent_ss_mean)
-    plt.fill_between(np.arange(len(cov_ss_mean)), cov_ss_mean-cov_ss_std, cov_ss_mean+cov_ss_std,alpha=0.2)
-    plt.fill_between(np.arange(len(base_ss_mean)), base_ss_mean-base_ss_std, base_ss_mean+base_ss_std,alpha=0.2)
-    plt.fill_between(np.arange(len(ent_ss_mean)), ent_ss_mean-ent_ss_std, ent_ss_mean+ent_ss_std,alpha=0.2)
-    plt.legend([r'$L_1$-Cov', "Uniform", "MaxEnt"])
-    plt.xlabel("Number of Epochs")
-    plt.ylabel("Unique State Visisted")
-    plt.savefig(fname, dpi=300)
-
-def running_average_ss3_final(cov_list_of_average_num_s, base_list_of_average_num_s, ent_list_of_average_num_s):
-    fname = '/Users/philipamortila/Documents/GitHub/modular-rich-obs/arxiv_efficient/figs/mountaincar/num_states.pdf'
-    #compute statistics.
-    #mean:
-    cov_ss_mean = np.mean(cov_list_of_average_num_s,axis=0)
-    ent_ss_mean = np.mean(ent_list_of_average_num_s,axis=0)
-    base_ss_mean = np.mean(base_list_of_average_num_s,axis=0)
-    #std error (ddof=1):
-    cov_ss_std = scipy.stats.sem(cov_list_of_average_num_s,axis=0)
-    ent_ss_std = scipy.stats.sem(ent_list_of_average_num_s,axis=0)
-    base_ss_std = scipy.stats.sem(base_list_of_average_num_s,axis=0)
-
-    #print('done computing stats in ')
     plt.figure()
     plt.gca().set_aspect(0.21)
     plt.plot(np.arange(len(cov_ss_mean)), cov_ss_mean, linewidth=2.5)
@@ -199,19 +116,15 @@ def running_average_ss3_final(cov_list_of_average_num_s, base_list_of_average_nu
     plt.xticks([0,5,10,15],fontsize=13)
     plt.yticks(fontsize=14)
     plt.savefig(fname, dpi=300, bbox_inches="tight")
-    # plt.legend([r'$L_1$-Cov', "Uniform", "MaxEnt"])
-    # plt.xlabel("Number of Epochs")
-    # plt.ylabel("Unique State Visisted")
-    # plt.savefig(fname, dpi=300)
 
 def running_average_sas3(cov_list_of_average_num_sa, base_list_of_average_num_sa, ent_list_of_average_num_sa):
-    fname = get_next_file(FIG_DIR, model_time, "list_of_num_sa", ".pdf")
+    fname = get_next_file(FIG_DIR, model_time, "num_sa_pairs", ".pdf")
     #compute statistics.
     #mean:
     cov_ss_mean = np.mean(cov_list_of_average_num_sa,axis=0)
     ent_ss_mean = np.mean(ent_list_of_average_num_sa,axis=0)
     base_ss_mean = np.mean(base_list_of_average_num_sa,axis=0)
-    #std error (ddof=1):
+    #std error:
     cov_ss_std = scipy.stats.sem(cov_list_of_average_num_sa,axis=0)
     ent_ss_std = scipy.stats.sem(ent_list_of_average_num_sa,axis=0)
     base_ss_std = scipy.stats.sem(base_list_of_average_num_sa,axis=0)
@@ -268,40 +181,7 @@ def heatmap(running_avg_p, avg_p, i, env):
     fname = avg_heatmap_dir + "heatmap_%02d.pdf" % i
     plt.savefig(fname)
 
-
 def heatmap3x4(running_avg_ps, running_avg_ps_online, running_avg_ps_baseline, indexes=[0,1,2,3]):
-    plt.figure(figsize=(4,4))
-    row1 = [plt.subplot(3,4,1), plt.subplot(3,4,2), plt.subplot(3,4,3), plt.subplot(3,4,4)]
-    row2 = [plt.subplot(3,4,5), plt.subplot(3,4,6), plt.subplot(3,4,7), plt.subplot(3,4,8)]
-    row3 = [plt.subplot(3,4,9), plt.subplot(3,4,10), plt.subplot(3,4,11), plt.subplot(3,4,12)]
-
-    # TODO: colorbar for the global figure
-    for idx, ax in zip(indexes,row1):
-        min_value = np.min(np.ma.log(running_avg_ps[idx]))
-        ax.imshow(np.ma.log(running_avg_ps[idx]).filled(min_value), interpolation='spline16', cmap='Blues')
-        ax.set_title("Epoch %d" % idx)
-        ax.xaxis.set_ticks([])
-        ax.yaxis.set_ticks([])
-
-    for idx, ax in zip(indexes,row2):
-        min_value = np.min(np.ma.log(running_avg_ps_online[idx]))
-        ax.imshow(np.ma.log(running_avg_ps_online[idx]).filled(min_value), interpolation='spline16', cmap='Greens')
-        ax.xaxis.set_ticks([])
-        ax.yaxis.set_ticks([])
-    
-    for idx, ax in zip(indexes,row3):
-        min_value = np.min(np.ma.log(running_avg_ps_baseline[idx]))
-        ax.imshow(np.ma.log(running_avg_ps_baseline[idx]).filled(min_value), interpolation='spline16', cmap='Oranges')
-        ax.xaxis.set_ticks([])
-        ax.yaxis.set_ticks([])
-
-    plt.tight_layout()
-    fname = get_next_file(FIG_DIR, model_time, "time_heatmaps3x4", ".pdf")
-    plt.savefig(fname,dpi=300)
-    # plt.colorbar()
-    # plt.show()
-
-def heatmap3x4_final(running_avg_ps, running_avg_ps_online, running_avg_ps_baseline, indexes=[0,1,2,3]):
     plt.figure(figsize=(4,4))
     row1 = [plt.subplot(3,4,1), plt.subplot(3,4,2), plt.subplot(3,4,3), plt.subplot(3,4,4)]
     row2 = [plt.subplot(3,4,5), plt.subplot(3,4,6), plt.subplot(3,4,7), plt.subplot(3,4,8)]
@@ -327,18 +207,9 @@ def heatmap3x4_final(running_avg_ps, running_avg_ps_online, running_avg_ps_basel
         ax.yaxis.set_ticks([])
         ax.set_title("Epoch %d" % idx, fontsize = 11.5, y =-0.475)
 
-    # plt.tight_layout()
-    # fname = get_next_file(FIG_DIR, model_time, "time_heatmaps3x4", ".pdf")
-    # plt.savefig(fname,dpi=300)
-    # plt.colorbar()
-    # plt.show()
-    # plt.xlabel('velocity')
-    # plt.ylabel('position')
     plt.tight_layout()
-    #plt.subplots_adjust(wspace=0, hspace=0)
     plt.suptitle('Occupancy Heatmap', fontsize=14)
-    #fname = get_next_file(FIG_DIR, model_time, "time_heatmaps3x4"+str(replicate),".pdf")
-    fname = '/Users/philipamortila/Documents/GitHub/modular-rich-obs/arxiv_efficient/figs/mountaincar/heatmap.pdf'
+    fname = get_next_file(FIG_DIR, model_time, "time_heatmaps3x4",".pdf")
     plt.savefig(fname, dpi=400, format="pdf", bbox_inches="tight")
     # plt.colorbar()
     # plt.show()
@@ -426,13 +297,12 @@ def main():
         base_list_of_average_num_sa.append(base_sas)
 
 
-    running_average_entropy3_final(cov_list_of_running_avg_ent, base_list_of_running_avg_ent, ent_list_of_running_avg_ent)
-    running_average_l13_final(cov_list_of_running_avg_l1, base_list_of_running_avg_l1, ent_list_of_running_avg_l1) 
-    running_average_ss3_final(cov_list_of_average_num_s, base_list_of_average_num_s, ent_list_of_average_num_s)
-    running_average_sas3(cov_list_of_average_num_sa, base_list_of_average_num_sa, ent_list_of_average_num_sa)
+    running_average_entropy3(cov_list_of_running_avg_ent, base_list_of_running_avg_ent, ent_list_of_running_avg_ent)
+    running_average_l13(cov_list_of_running_avg_l1, base_list_of_running_avg_l1, ent_list_of_running_avg_l1) 
+    running_average_ss3(cov_list_of_average_num_s, base_list_of_average_num_s, ent_list_of_average_num_s)
     indexes = [0,4,9,14]
-    fav_index = 0
-    heatmap3x4_final(cov_running_avg_ps[fav_index], ent_running_avg_ps[fav_index], baseline_running_avg_ps[fav_index], indexes)
+    fav_index = 0 #pick the run that you want to visualize the occupancies for
+    heatmap3x4(cov_running_avg_ps[fav_index], ent_running_avg_ps[fav_index], baseline_running_avg_ps[fav_index], indexes)
 
 
 if __name__ == "__main__":

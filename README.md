@@ -34,4 +34,4 @@ Flags:
 
 Things to change in the code:
 
-- sys.path in Line 4 (at time of writing) of collect_baseline.py. 
+- sys.path in Line 4 of collect_baseline.py. 
