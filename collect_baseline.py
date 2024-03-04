@@ -19,7 +19,6 @@ import gym
 
 from cart_entropy_policy import CartEntropyPolicy
 import base_utils
-import curiosity
 import plotting
 
 import torch
